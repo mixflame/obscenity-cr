@@ -1,6 +1,6 @@
 # obscenity-cr
 
-TODO: Write a description here
+This is a direct Crystal port of the Rubygem "Obscenity" <https://github.com/tjackiw/obscenity>
 
 ## Installation
 
@@ -9,7 +9,7 @@ TODO: Write a description here
    ```yaml
    dependencies:
      obscenity-cr:
-       github: your-github-user/obscenity-cr
+       github: mixflame/obscenity-cr
    ```
 
 2. Run `shards install`
@@ -20,11 +20,11 @@ TODO: Write a description here
 require "obscenity-cr"
 ```
 
-TODO: Write usage instructions here
+See Obscenity instructions and spec folder, the invocation is the same.
 
 ## Development
 
-TODO: Write development instructions here
+Just clone and run the tests while editing.
 
 ## Contributing
 
