@@ -26,7 +26,7 @@ class Obscenity
     def self.profane?(text)
       return(false) unless text.to_s.size >= 3
       blacklist.each do |foul|
-        return(true) if text =~ /\b#{foul}\b/i && !whitelist.includes?(foul)
+        return(true) if text =~ /#{foul}/i && !whitelist.includes?(foul)
       end
       false
     end
@@ -35,7 +35,7 @@ class Obscenity
       return(text) unless text.to_s.size >= 3
 
       blacklist.each do |foul|
-        text = text.gsub(/\b#{foul}\b/i, replace(foul)) unless whitelist.includes?(foul)
+        text = text.gsub(/#{foul}/i, replace(foul)) unless whitelist.includes?(foul)
       end
       @@scoped_replacement = nil
       text
