@@ -11,7 +11,7 @@ class Obscenity
       def initialize(proc = nil)
         
         proc.call(self) if proc
-        validate_config_options
+        # validate_config_options
       end
       
       def replacement
