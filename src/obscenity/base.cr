@@ -7,7 +7,8 @@ class Obscenity
     @@scoped_replacement : (String | Nil | Symbol) = nil
 
     def self.blacklist
-      @@blacklist = set_list_content(Obscenity.config.blacklist)
+      # @@blacklist = set_list_content(Obscenity.config.blacklist)
+      @@blacklist = YAML.parse(BLACKLIST).as_a.map(&.as_s)
     end
 
     def self.blacklist=(value)
