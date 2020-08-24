@@ -1,7 +1,9 @@
 class Obscenity
-    class Error < RuntimeError; end
-    
-    class UnkownContent     < Error; end
-    class UnkownContentFile < Error; end
-    class EmptyContentList  < Error; end
-  end
+  class Error < RuntimeError; end
+
+  class UnkownContent < Error; end
+
+  class UnkownContentFile < Error; end
+
+  class EmptyContentList < Error; end
+end
