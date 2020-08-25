@@ -4,60 +4,51 @@ class Obscenity
   class Base
     @@blacklist : Array(String) = [""]
     @@whitelist : Array(String) = [""]
-    @@scoped_replacement : String | Symbol? = nil
+    @@scoped_replacement : (String | Nil | Symbol) = nil
 
     def self.blacklist
-      @@blacklist = set_list_content Obscenity.config.blacklist
+      # @@blacklist = set_list_content(Obscenity.config.blacklist)
+      @@blacklist = YAML.parse(BLACKLIST).as_a.map(&.as_s)
     end
 
-    def self.blacklist=(value : Symbol)
-      raise "invalid blacklist #{value}" if value != :default
-      @@blacklist = Obscenity.config.blacklist
-    end
-
-    def self.blacklist=(value : Array(String) | String | Path)
-      @@blacklist = set_list_content value
+    def self.blacklist=(value)
+      @@blacklist = value == :default ? set_list_content(Obscenity::Config.new.blacklist) : value
     end
 
     def self.whitelist
-      @@whitelist = set_list_content Obscenity.config.whitelist
+      @@whitelist = set_list_content(Obscenity.config.whitelist)
     end
 
-    def self.whitelist=(value : Array(String) | String | Path)
-      @@whitelist = set_list_content value
+    def self.whitelist=(value)
+      @@whitelist = value == :default ? set_list_content(Obscenity::Config.new.whitelist) : value
     end
 
-    def self.whitelist=(value : Symbol)
-      @@whitelist = set_list_content Obscenity::Config.new.whitelist
-    end
-
-    def self.profane?(text : String)
-      return(false) unless text.size >= 3
+    def self.profane?(text)
+      return(false) unless text.to_s.size >= 3
       blacklist.each do |foul|
         return(true) if text =~ /\b#{foul}\b/i && !whitelist.includes?(foul)
       end
       false
     end
 
-    def self.sanitize(text : String)
-      return(text) unless text.size >= 3
+    def self.sanitize(text)
+      return(text) unless text.to_s.size >= 3
 
       blacklist.each do |foul|
         text = text.gsub(/\b#{foul}\b/i, replace(foul)) unless whitelist.includes?(foul)
       end
-
       @@scoped_replacement = nil
       text
     end
 
-    def self.replacement(chars : String | Symbol?)
-      @@scoped_replacement = chars || :default
+    def self.replacement(chars)
+      @@scoped_replacement = chars
       self
     end
 
-    def self.offensive(text : String)
+    def self.offensive(text)
       words = [] of String
-      return(words) unless text.size >= 3
+      return(words) unless text.to_s.size >= 3
       blacklist.each do |foul|
         words << foul if text =~ /\b#{foul}\b/i && !whitelist.includes?(foul)
       end
@@ -65,7 +56,8 @@ class Obscenity
     end
 
     def self.replace(word)
-      case content = @@scoped_replacement || Obscenity.config.replacement
+      content = @@scoped_replacement || Obscenity.config.replacement
+      case content
       when :vowels            then word.gsub(/[aeiou]/i, '*')
       when :stars             then (0...word.size).map { "*" }.join
       when :nonconsonants     then word.gsub(/[^bcdfghjklmnpqrstvwxyz]/i, '*')
@@ -74,12 +66,12 @@ class Obscenity
       end
     end
 
-    private def self.set_list_content(list : Array(String))
-      list
-    end
-
-    private def self.set_list_content(list : String | Path)
-      File.open list, &.each_line.to_a
+    def self.set_list_content(list)
+      case list
+      when Array(String) then list
+      when String        then File.open(list.to_s) { |file| YAML.parse(file) }.as_a.map(&.as_s)
+      else                    [] of String
+      end
     end
   end
 end
