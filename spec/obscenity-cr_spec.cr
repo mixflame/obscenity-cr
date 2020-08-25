@@ -5,18 +5,18 @@ describe Obscenity do
 
   it "respond to methods and attributes" do
     # [:configure, :config, :profane?, :sanitize, :offensive, :replacement].each do |field|
-    Obscenity.responds_to?(:configure).should eq(true)
-    Obscenity.responds_to?(:config).should eq(true)
-    Obscenity.responds_to?(:profane?).should eq(true)
-    Obscenity.responds_to?(:sanitize).should eq(true)
-    Obscenity.responds_to?(:offensive).should eq(true)
-    Obscenity.responds_to?(:replacement).should eq(true)
+      Obscenity.responds_to?(:configure).should eq(true)
+      Obscenity.responds_to?(:config).should eq(true)
+      Obscenity.responds_to?(:profane?).should eq(true)
+      Obscenity.responds_to?(:sanitize).should eq(true)
+      Obscenity.responds_to?(:offensive).should eq(true)
+      Obscenity.responds_to?(:replacement).should eq(true)
     # end
   end
 
   it "should accept a configuration block" do
-    Obscenity.configure ->(config : Obscenity::Config) {
-      config.blacklist = :default
+    Obscenity.configure -> (config : Obscenity::Config) {
+      config.blacklist   = :default
       config.replacement = :garbled
     }
   end
